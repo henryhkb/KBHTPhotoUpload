@@ -6,13 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="{{ asset('css/bootstrap.min.css') }}">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" 
+    integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer">
+    </script>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"
-        integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
         <style>
-
+            body{
+                background-color: transparent;
+            }
             
 
             .uploadedImage{
@@ -36,9 +38,9 @@
 
             <button class="btn btn-primary" id="download">Download</button>
 </div> --}}
-    <div id="imgPreview" class="text text-center">
-        <div class="firstUpload">
-            <img class="img-fluid" src="{{ asset('img/photo.jpeg') }}" alt="" width="309" height="300">
+    <div  class="text text-center" id="canvas">
+        <div class="firstUpload" >
+            <img class="img-fluid" src="{{ asset('img/photo.png') }}" alt="" width="309" height="300">
         </div>
 
         <div class="uploadedImage">
@@ -50,21 +52,14 @@
     <div class="text text-center">
         <input type="file" id="uploaded-image" onchange="previewImage()">
 
-        <button class="btn btn-primary" id="download">Download</button>
+        <button class="btn btn-primary" id="canvasDownload">Download</button>
     </div>
 
 
+    <script src="{{asset('html2canvas.min.js')}}"></script>
 
 
-
-
-
-
-
-
-
-
-    <script type="text/javascript">
+    <script >
         function previewImage() {
             var input = document.getElementById('uploaded-image');
             var preview = document.getElementById('preview');
@@ -80,16 +75,35 @@
         }
 
 
-        window.onload = function(){
-            document.getElementById("download")
-            .addEventListener("click",()=>{
-                const photoDownload = this.document.getElementById("imgPreview");
-               html2pdf().from(photoDownload).save(); 
-            })
+       document.getElementById("canvasDownload").onclick = function(){
+            const screenshotTarget = document.getElementById("canvas");
+
+            html2canvas(screenshotTarget).then((canvas)=>{
+                const base64image = canvas.toDataURL("image/png");
+                var anchor = document.createElement('a');
+                anchor.setAttribute("href", base64image);
+                anchor.setAttribute("download", "myPhoto.png");
+                anchor.click();
+                anchor.remove(); 
+            });
+       }
 
 
-        }
-             
+        
+
+
+        // window.onload = function(){
+        //     document.getElementById("download")
+        //     .addEventListener("click",()=>{
+        //         const photoDownload = this.document.getElementById("imgPreview");
+        //        html2canvas().from(photoDownload).save(); 
+        //     })
+
+
+        // }
+
+
+        
     </script>
 </body>
 
